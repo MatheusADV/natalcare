@@ -1,0 +1,226 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NatalCare</title>
+    <link rel="stylesheet" href="{% static 'pesq_est.css' %}">
+</head>
+<body>
+
+    <header class="header">
+        <div class="logo"><a href="{% url 'menu' %}">natal<span>care</span></a></div>
+        <form action="{% url 'pesq' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" placeholder="Digite o nome da clínica:" class="search-input" name="pesqi">
+
+            <div class="filter-panel" id="filterPanel">
+                <h3>Filtrar Clínicas</h3>
+                    <select name="esp" id="">
+                        <option value="0">Especialidades</option>
+                        {% for i in esp %}
+                            <option value="{{i.id}}">{{i.nome}}</option>
+                        {% endfor %}
+                    </select>
+                    <select name="plan" id="">
+                        <option value="0">Planos</option>
+                        {% for i in plan %}
+                            <option value="{{i.id}}">{{i.nome}}</option>
+                        {% endfor %}
+                    </select>
+                <button class="apply-filters-button">Aplicar Filtros</button>
+            </div>
+        </form>
+        <button class="filter-button" onclick="toggleFilterPanel()">Filtros</button>
+
+        <span id="prfl-login">
+            {% if request.user.usuario %}
+                <button class="login-button" id="usu">{{request.user.usuario}}</button>
+                <div class="menu-panel" id="menuPanel">
+                    <section id="menuh">
+                            <a href="{% url 'menu' %}">
+                                <section id="opc"><h4>Menu</h4></section>
+                            </a>
+                            <a href="{% url 'perfil' %}">
+                                <section id="opc"><h4>Perfil</h4></section>
+                            </a>
+                            <a href="{% url 'pesq' %}">
+                                <section id="opc"><h4>Pesquisa</h4></section>
+                            </a>
+                            <a href="{% url 'chatusu' %}">
+                                <section id="opc"><h4>Agendamento</h4></section>
+                            </a>
+                            <a href="{% url 'logoutu' %}">
+                                <section id="opc"><h4>Sair</h4></section>
+                            </a>
+                    </section>
+                </div>
+                <button class="menu-button" onclick="toggleMenuPanel()"><img src="{% static 'imagens_site/menu-img.png' %}" alt="" height="50px" width="50px"></button>
+            {% else %}
+                <img src="{% static 'imagens_site/perfil.svg' %}" alt="user">
+                <button class="login-button"><a href="{% url 'log' %}">Entrar</a></button>
+                <div class="menu-panel" id="menuPanel">
+                    <section id="menuh">
+                        <a href="{% url 'menu' %}">
+                            <section id="opc"><h4>Menu</h4></section>
+                        </a>
+                        <a href="{% url 'pesq' %}">
+                            <section id="opc"><h4>Pesquisa</h4></section>
+                        </a>
+                        <a href="{% url 'log' %}">
+                            <section id="opc"><h4>Entrar</h4></section>
+                        </a>
+                    </section>
+                </div>
+                <button class="menu-button" onclick="toggleMenuPanel()"><img src="{% static 'imagens_site/menu-img.png' %}" alt="" height="50px" width="50px"></button>
+            {% endif %}
+        </span>
+    </header>
+   
+   
+    <main class="results-section">
+        
+        <div class="results-container">
+            <h2>Resultados:</h2>
+
+            {% if mens or not espec and not plano and not inpu and not respe %}
+                <p style="color: white;">{{mens}}</p>
+
+                <style>
+                    body{
+                        height: 100vh;
+                    }
+                </style>
+            {% endif %}
+        
+            {% if not respe %}
+
+                {% for i in espec %}
+                    <a href="{% url 'clinu' i.id %}">
+                        <div class="result-item">
+                            <div class="result-content">
+                                <span id="topcont">
+                                    <img src="{% static 'imagens_site/clingen.svg' %}" alt="Ícone de clínica">
+                                    <h3>{{i.nome}}</h3>
+                                </span>
+                                <p>{{i.desc}}</p>
+                            </div>
+                        </div>
+                    </a>
+
+                    <style>
+                        body{
+                            height: 100vh;
+                        }
+                    </style>
+                {% endfor %}
+
+                {% for i in plano %}
+                    <a href="{% url 'clinu' i.id %}">
+                        <div class="result-item">
+                            <div class="result-content">
+                                <span id="topcont">
+                                    <img src="{% static 'imagens_site/clingen.svg' %}" alt="Ícone de clínica">
+                                    <h3>{{i.nome}}</h3>
+                                </span>
+                                <p>{{i.desc}}</p>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+
+            {% endif %}
+
+            {% for i in inpu %}
+                <a href="{% url 'clinu' i.id %}">
+                    <div class="result-item">
+                        <div class="result-content">
+                            <span id="topcont">
+                                <img src="{% static 'imagens_site/clingen.svg' %}" alt="Ícone de clínica">
+                                <h3>{{i.nome}}</h3>
+                            </span>
+                            <p>{{i.desc}}</p>
+                        </div>
+                        
+                    </div>
+                </a>
+            {% endfor %}
+            
+            {% for i in respe %}
+                <a href="{% url 'clinu' i.id %}">
+                    <div class="result-item">
+                        <div class="result-content">
+                            <span id="topcont">
+                                <img src="{% static 'imagens_site/clingen.svg' %}" alt="Ícone de clínica">
+                                <h3>{{i.nome}}</h3>
+                            </span>
+                            <p>{{i.desc}}</p>
+                        </div>
+                        
+                    </div>
+                </a>
+
+                <style>
+                    body{
+                        height: 100vh;
+                    }
+                </style>
+            {% endfor %}
+        
+
+    </main>
+
+    <footer class="footer">
+        <div class="footer-menu">
+            <ul>
+                <li><strong>Início</strong><br>Home<br>Login<br>Cadastro</li>
+                <li><strong>Sobre nós</strong><br>Informações<br>Contato</li>
+                <li><strong>Suporte</strong><br>FAQ<br>Chat</li>
+            </ul>
+        </div>
+        <div class="footer-logo">
+            <p class="brand-name">natalcare</p>
+            <p class="brand-slogan">Sua pesquisa acaba aqui!</p>
+        </div>
+        <div class="footer-social">
+            <!-- LinkedIn SVG -->
+            <a href="#" title="LinkedIn">
+                <img src="{% static 'imagens_site/linkedin.svg' %}" alt="">
+            </a>
+            <!-- Instagram SVG -->
+            <a href="#" title="Instagram">
+                <img src="{% static 'imagens_site/instagram.svg' %}" alt="">
+            </a>
+            <!-- Facebook SVG -->
+            <a href="#" title="Facebook">
+                <img src="{% static 'imagens_site/facebook.svg' %}" alt="">
+            </a>
+            <!-- Twitter SVG -->
+            <a href="#" title="Twitter">
+                <img src="{% static 'imagens_site/x.svg' %}" alt="">
+            </a>
+        </div>
+    </footer>
+    <script>
+        function toggleFilterPanel() {
+            var panel = document.getElementById("filterPanel");
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+
+        function toggleMenuPanel() {
+            var panel = document.getElementById("menuPanel");
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

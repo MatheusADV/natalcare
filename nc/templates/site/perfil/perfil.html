@@ -1,0 +1,189 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Perfil</title>
+    <!-- Adicionando fontes do Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Krub:wght@400;500;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'perfil_est.css' %}">
+</head>
+<body>
+    <!-- Header Adicionado -->
+    <header class="header">
+        <div class="logo"><a href="{% url 'menu' %}">natal<span>care</span></a></div>
+        <a href="{% url 'pesq' %}"><input type="text" placeholder="Digite o nome da clínica:" class="search-input"></a>
+        <span id="prfl-login">
+            {% if request.user.usuario %}
+                <button class="login-button" id="usu">{{request.user.usuario}}</button>
+                <div class="menu-panel" id="menuPanel">
+                    <section id="menuh">
+                            <a href="{% url 'menu' %}">
+                                <section id="opc"><h4>Menu</h4></section>
+                            </a>
+                            <a href="{% url 'perfil' %}">
+                                <section id="opc"><h4>Perfil</h4></section>
+                            </a>
+                            <a href="{% url 'pesq' %}">
+                                <section id="opc"><h4>Pesquisa</h4></section>
+                            </a>
+                            <a href="{% url 'chatusu' %}">
+                                <section id="opc"><h4>Agendamento</h4></section>
+                            </a>
+                            <a href="{% url 'logoutu' %}">
+                                <section id="opc"><h4>Sair</h4></section>
+                            </a>
+                    </section>
+                </div>
+                <button class="menu-button" onclick="toggleMenuPanel()"><img src="{% static 'imagens_site/menu-img.png' %}" alt="" height="50px" width="50px"></button>
+            {% endif %}
+        </span>
+    </header>
+    <main>
+        {% if messages %}
+            {% for message in messages %}
+                <script>window.alert("{{ message }}");</script>
+            {% endfor %}
+        {% endif %}
+        <form class="container" action="{% url 'properfil' %}" method="POST">
+            {% csrf_token %}
+            <div class="title">Gerenciamento de Perfil</div>
+            <div class="content">
+                <div class="column">
+                    <h2>Dados:</h2>
+                    <input type="text" id="nome" placeholder="Nome" name="nome" disabled value="{{request.user.usuario.nome}}">
+                    <input type="tel" id="telefone" placeholder="Telefone" name="telefone" disabled value="{{request.user.usuario.telefone}}">
+                    <input type="text" id="cpf" placeholder="CPF" name="cpf" disabled value="{{request.user.usuario.cpf}}">
+                    <input type="email" id="email" placeholder="E-mail" name="email" disabled value="{{request.user.usuario.email}}">
+                </div>
+                <div class="column">
+                    <h2>Endereço:</h2>
+                    <div class="linha">
+                        <input type="text" id="logradouro" placeholder="Logradouro" name="logradouro" disabled value="{{request.user.usuario.endereco.logradouro}}">
+                        <input type="text" id="numero" placeholder="Número" name="numero" disabled value="{{request.user.usuario.endereco.numero}}"> 
+                    </div>
+                    <input type="text" id="complemento" placeholder="Complemento" name="complemento" disabled value="{{request.user.usuario.endereco.complemento}}">
+                    <div class="linha">
+                        <input type="text" id="cep" placeholder="CEP" name="cep" disabled value="{{request.user.usuario.endereco.cep}}">
+                        <input type="text" id="bairro" placeholder="Bairro" name="bairro" disabled value="{{request.user.usuario.endereco.bairro}}">
+                    </div>
+                    <div class="linha">
+                        <input type="text" id="cidade" placeholder="Cidade" name="cidade" disabled value="{{request.user.usuario.endereco.cidade}}">
+                        <select id="estado" name="estado" disabled>
+                            <option value="{{request.user.usuario.endereco.estado}}">{{request.user.usuario.endereco.estado}}</option>
+                            <option value="AC">AC</option>
+                            <option value="AL">AL</option>
+                            <option value="AP">AP</option>
+                            <option value="AM">AM</option>
+                            <option value="BA">BA</option>
+                            <option value="CE">CE</option>
+                            <option value="DF">DF</option>
+                            <option value="ES">ES</option>
+                            <option value="GO">GO</option>
+                            <option value="MA">MA</option>
+                            <option value="MT">MT</option>
+                            <option value="MS">MS</option>
+                            <option value="MG">MG</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="PR">PR</option>
+                            <option value="PE">PE</option>
+                            <option value="PI">PI</option>
+                            <option value="RJ">RJ</option>
+                            <option value="RN">RN</option>
+                            <option value="RS">RS</option>
+                            <option value="RO">RO</option>
+                            <option value="RR">RR</option>
+                            <option value="SC">SC</option>
+                            <option value="SP">SP</option>
+                            <option value="SE">SE</option>
+                            <option value="TO">TO</option>
+                        </select>
+                    </div>
+                        <br> <br>
+                        <p id="edit" onclick="editar()" class="editar-btn"><img src="{% static 'imagens_site/pen.svg' %}" alt="">Editar</p>
+                </div>
+            </div>
+            <!-- Botão Salvar -->
+            <button type="submit" class="salvar-btn" id="btns">Salvar</button>
+        </form>
+        <section id="clin_favs">
+            <div class="title">Clínicas Favoritas</div>
+
+            {% for i in favo %}
+                <section id="fav">
+                        <span id="topfav">
+                            <span id="titlefav">
+                                <img src="{% static 'imagens_site/clingen.svg' %}" alt="">
+                                <h2>{{i.clinica}}</h2>
+                            </span>
+                            <span id="favimg">
+                                <a href="{% url 'favs' i.clinica.id %}"><img src="{% static 'imagens_site/favorito-pintado.png' %}" alt="" height="30px" width="30px"></a>
+                            </span>
+                        </span>
+                        <p>{{i.clinica.desc}}</p>
+                </section>
+            {% endfor %}
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-menu">
+            <ul>
+                <li><strong>Início</strong><br>Home<br>Login<br>Cadastro</li>
+                <li><strong>Sobre nós</strong><br>Informações<br>Contato</li>
+                <li><strong>Suporte</strong><br>FAQ<br>Chat</li>
+            </ul>
+        </div>
+        <div class="footer-logo">
+            <p class="brand-name">natalcare</p>
+            <p class="brand-slogan">Sua pesquisa acaba aqui!</p>
+        </div>
+        <div class="footer-social">
+            <!-- LinkedIn SVG -->
+            <a href="#" title="LinkedIn">
+                <img src="{% static 'imagens_site/linkedin.svg' %}" alt="">
+            </a>
+            <!-- Instagram SVG -->
+            <a href="#" title="Instagram">
+                <img src="{% static 'imagens_site/instagram.svg' %}" alt="">
+            </a>
+            <!-- Facebook SVG -->
+            <a href="#" title="Facebook">
+                <img src="{% static 'imagens_site/facebook.svg' %}" alt="">
+            </a>
+            <!-- Twitter SVG -->
+            <a href="#" title="Twitter">
+                <img src="{% static 'imagens_site/x.svg' %}" alt="">
+            </a>
+        </div>
+    </footer>
+    
+    <script>
+        var inputs = document.querySelectorAll('input')
+        var select = document.getElementById('estado')
+        var edit = document.getElementById("edit")
+        var btn = document.getElementById("btns")
+
+        function editar(){
+            inputs.forEach(input => {
+            input.disabled = false;
+            input.style.border = "1px solid black";
+            select.disabled = false;
+            select.style.border = "1px solid black";
+        })}
+
+        function toggleMenuPanel() {
+            var panel = document.getElementById("menuPanel");
+            if (panel.style.display === "block") {
+                panel.style.display = "none";
+            } else {
+                panel.style.display = "block";
+            }
+        }
+        
+    </script>
+</body>
+</html>

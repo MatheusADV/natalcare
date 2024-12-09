@@ -1,0 +1,301 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'cad_est.css' %}">
+    <title>Cadastro</title>
+</head>
+<body>
+    <header id="titulo">
+        <a href="{% url 'menu' %}"><h1>natal<span id="care">care</span></h1></a>
+    </header>
+   
+    <section id="la">
+        <section id="tipo-conta">
+            <input type="radio" id="cad_user" name="radio" checked> <label for="user"><h2>Usuário</h2></label>
+            <input type="radio" id="cad_clin" name="radio"> <label for="clin"><h2>Clínica</h2></label>
+        </section>
+        {% if messages %}
+            {% for message in messages %}
+                <script>window.alert("{{ message }}");</script>
+            {% endfor %}
+        {% endif %}
+        <form method="POST" action="{% url 'procadu' %}" id="cad-area-user">
+            {% csrf_token %}
+            <input type="text" placeholder="Nome" id="nome_user" name="nome" required onchange='confereNome()'>
+            <input type="text" placeholder="Telefone" id="tel_user" class="mascara" name="telefone" required>
+            <input type="text" placeholder="CPF" id="cpf_user" class="mascara" name="cpf" required>
+            <input type="email" placeholder="Email" id="email_user" name="email" required>
+            <input type="password" placeholder="Senha" class="senha_user" name="senha" required onchange='confereSenha()'>
+            <input type="password" placeholder="Confirmar senha" class="senha_user" name="confirma" required onchange='confereSenha()' >
+            <div class="linha">
+                <input type="text" placeholder="Logradouro" id="logradouro_user" name="logradouro" required>
+                <input type="text" placeholder="Número" id="numero_user" name="numero" required onchange="confereNumero()">
+            </div>
+            <input type="text" placeholder="Complemento" id="complemento_user" name="complemento">
+            <div class="linha">
+                <input type="text" placeholder="CEP" id="cep_user" class="mascara" name="cep" required>
+                <input type="text" placeholder="Bairro" id="bairro_user" name="bairro" required onchange="confereBairro()">
+            </div>
+            <div class="linha">
+                <input type="text" placeholder="Cidade" id="cidade_user" name="cidade" required onchange="confereCidade()">
+                <select id="estado" name="estado" >
+                    <option value="">Estado</option>
+                    <option value="AC">AC</option>
+                    <option value="AL">AL</option>
+                    <option value="AP">AP</option>
+                    <option value="AM">AM</option>
+                    <option value="BA">BA</option>
+                    <option value="CE">CE</option>
+                    <option value="DF">DF</option>
+                    <option value="ES">ES</option>
+                    <option value="GO">GO</option>
+                    <option value="MA">MA</option>
+                    <option value="MT">MT</option>
+                    <option value="MS">MS</option>
+                    <option value="MG">MG</option>
+                    <option value="PA">PA</option>
+                    <option value="PB">PB</option>
+                    <option value="PR">PR</option>
+                    <option value="PE">PE</option>
+                    <option value="PI">PI</option>
+                    <option value="RJ">RJ</option>
+                    <option value="RN">RN</option>
+                    <option value="RS">RS</option>
+                    <option value="RO">RO</option>
+                    <option value="RR">RR</option>
+                    <option value="SC">SC</option>
+                    <option value="SP">SP</option>
+                    <option value="SE">SE</option>
+                    <option value="TO">TO</option>
+            </select>
+        </div>
+        
+            <input type="submit" value="Cadastrar" id="cad_user">
+        </form>
+
+        <form method="POST" action="{% url 'procadc' %}" id="cad-area-clin">
+            {% csrf_token %}
+            <input type="text" placeholder="Nome" id="nome_clin" name="nome" required onchange="confereNomeClin()">
+            <input type="text" placeholder="Telefone" id="tel_clin" class="mascara" name="telefone" required>
+            <input type="text" placeholder="CNPJ" id="cnpj" class="mascara" name="cnpj" required>
+            <input type="email" placeholder="Email" id="email_clin" name="email" required>
+            <input type="password" placeholder="Senha" id="senha_clin" class="senha_clin" name="senha" required onchange='confereSenhaClin()'>
+            <input type="password" placeholder="Confirmar senha" id="confirm_senha_clin" class="senha_clin" name="confirma" required onchange='confereSenhaClin()'>
+            <div class="linha">
+                <input type="text" placeholder="Logradouro" id="logradouro" name="logradouro" required>
+                <input type="text" placeholder="Número" id="numero_clin" name="numero" required onchange="confereNumeroClin()">
+            </div>
+            <input type="text" placeholder="Complemento" id="complemento" name="complemento">
+            <div class="linha">
+                <input type="text" placeholder="CEP" id="cep" class="mascara" name="cep" required>
+                <input type="text" placeholder="Bairro" id="bairro_clin" name="bairro" required onchange="confereBairroClin()">
+            </div>
+            <div class="linha">
+                <input type="text" placeholder="Cidade" id="cidade_clin" name="cidade" required onchange="confereCidadeClin()">
+                <select id="estado" name="estado" >
+                    <option value="">Estado</option>
+                    <option value="AC">AC</option>
+                    <option value="AL">AL</option>
+                    <option value="AP">AP</option>
+                    <option value="AM">AM</option>
+                    <option value="BA">BA</option>
+                    <option value="CE">CE</option>
+                    <option value="DF">DF</option>
+                    <option value="ES">ES</option>
+                    <option value="GO">GO</option>
+                    <option value="MA">MA</option>
+                    <option value="MT">MT</option>
+                    <option value="MS">MS</option>
+                    <option value="MG">MG</option>
+                    <option value="PA">PA</option>
+                    <option value="PB">PB</option>
+                    <option value="PR">PR</option>
+                    <option value="PE">PE</option>
+                    <option value="PI">PI</option>
+                    <option value="RJ">RJ</option>
+                    <option value="RN">RN</option>
+                    <option value="RS">RS</option>
+                    <option value="RO">RO</option>
+                    <option value="RR">RR</option>
+                    <option value="SC">SC</option>
+                    <option value="SP">SP</option>
+                    <option value="SE">SE</option>
+                    <option value="TO">TO</option>
+                </select>
+            </div>
+            
+        
+            <input type="submit" value="Cadastrar" id="cad_clin">
+        </form>
+    </section>
+
+    <!-- <script src="{% static 'back.js' %}"></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js" integrity="sha512-0XDfGxFliYJPFrideYOoxdgNIvrwGTLnmK20xZbCAvPfLGQMzHUsaqZK8ZoH+luXGRxTrS46+Aq400nCnAT0/w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        var cad_user = document.getElementById('cad_user');
+        var cad_clin = document.getElementById('cad_clin');
+        var cad_user_area = document.getElementById('cad-area-user');
+        var cad_clin_area = document.getElementById('cad-area-clin');
+
+        cad_user.addEventListener('click', function(){
+            if(cad_user.checked){
+                cad_user_area.style.display = 'flex';
+                cad_clin_area.style.display = 'none';
+            }});
+    
+            cad_clin.addEventListener('click', function(){
+            if(cad_clin.checked){
+                cad_clin_area.style.display = 'flex';
+                cad_user_area.style.display = 'none';
+            }});
+
+        $('#cpf_user').mask('000.000.000-00');
+        $('#cnpj').mask('00.000.000/0000-00');
+        $('#tel_user').mask('(00) 00000-0000');
+        $('#tel_clin').mask('(00) 00000-0000');
+        $('#cep_user').mask('00000-000');
+        $('#cep').mask('00000-000');
+
+        function confereNome(){
+            const nome = document.querySelector('input[name=nome]')
+            const nome_teste = nome.value.replace(/\s/g, '')
+
+            if (/^[a-zA-Z]+$/.test(nome_teste) === true || nome_teste === ''){
+                nome.setCustomValidity('');
+                nome.style.border = "none";
+            }else{
+                nome.setCustomValidity('Nome Inválido')
+                nome.style.border = "2px solid red";
+            }
+        }
+        
+        function confereSenha() {
+            const senha = document.querySelector('input[name=senha]');
+            const confirma = document.querySelector('input[name=confirma]');
+
+            if (confirma.value === senha.value) {
+                confirma.setCustomValidity('');
+                confirma.style.border= "none";
+                senha.style.border= "none";
+            } else {
+                confirma.setCustomValidity('As senhas não conferem.');
+                senha.style.border = "2px solid red";
+                confirma.style.border = "2px solid red";
+            }
+        }
+
+        function confereNumero(){
+            const numero = document.querySelector('input[name=numero]')
+            const numero_teste = numero.value.replace(/\s/g, '')
+
+            if(!isNaN(numero_teste) || numero_teste === ''){
+                numero.setCustomValidity('')
+                numero.style.border = "none"
+            }else{
+                numero.setCustomValidity('Número Inválido')
+                numero.style.border = "2px solid red";
+            }
+        }
+
+        function confereBairro(){
+            const bairro = document.querySelector('input[name=bairro]')
+            const bairro_teste = bairro.value.replace(/\s/g, '')
+
+            if (/^[a-zA-Z]+$/.test(bairro_teste) === true || bairro_teste === ''){
+                bairro.setCustomValidity('')
+                bairro.style.border = "none"
+            }else{
+                bairro.setCustomValidity('Bairro Inválido')
+                bairro.style.border = "2px solid red";
+            }
+        }
+
+        function confereCidade(){
+            const cidade = document.querySelector('input[name=cidade]')
+            const cidade_teste = cidade.value.replace(/\s/g, '')
+
+            if(/^[a-zA-Z]+$/.test(cidade_teste) === true || cidade_teste === ''){
+                cidade.setCustomValidity('')
+                cidade.style.border = "none"
+            }else{
+                cidade.setCustomValidity('Cidade Inválida')
+                cidade.style.border = "2px solid red";
+            }
+        }
+
+        function confereNomeClin(){
+            const nomeClin = document.querySelector('input[id=nome_clin]')
+            const nomeClin_teste = nomeClin.value.replace(/\s/g, '')
+
+            if (/^[a-zA-Z]+$/.test(nomeClin_teste) === true || nomeClin_teste === ''){
+                nomeClin.setCustomValidity('')
+                nomeClin.style.border = "none"
+            }else{
+                nomeClin.setCustomValidity('Nome Inválido')
+                nomeClin.style.border = "2px solid red";
+            }
+        }
+
+        function confereSenhaClin() {
+            const senhaClin = document.querySelector('input[id=senha_clin]')
+            const confirmasenhaClin = document.querySelector('input[id=confirm_senha_clin]')
+
+            if (confirmasenhaClin.value === senhaClin.value) {
+               confirmasenhaClin.setCustomValidity('');
+                confirmasenhaClin.style.border= "none";
+                senhaClin.style.border= "none";
+            } else {
+                confirmasenhaClin.setCustomValidity('As senhas não conferem.');
+                senhaClin.style.border = "2px solid red";
+                confirmasenhaClin.style.border = "2px solid red";
+            }
+
+        }
+
+        function confereNumeroClin(){
+            const numeroClin = document.querySelector('input[id=numero_clin]')
+            const numeroClin_teste = numeroClin.value.replace(/\s/g, '')
+
+            if(!isNaN(numeroClin_teste) || numeroClin_teste === ''){
+                numeroClin.setCustomValidity('')
+                numeroClin.style.border = "none"
+            }else{
+                numeroClin.setCustomValidity('Número Inválido')
+                numeroClin.style.border = "2px solid red";
+            }
+        }
+
+        function confereBairroClin(){
+            const bairroClin = document.querySelector('input[id=bairro_clin]')
+            const bairroClin_teste = bairroClin.value.replace(/\s/g, '')
+
+            if (/^[a-zA-Z]+$/.test(bairroClin_teste) === true || bairroClin_teste === ''){
+                bairroClin.setCustomValidity('')
+                bairroClin.style.border = "none"
+            }else{
+                bairroClin.setCustomValidity('Bairro Inválido')
+                bairroClin.style.border = "2px solid red";
+            }
+        }
+
+        function confereCidadeClin(){
+            const cidadeClin = document.querySelector('input[id=cidade_clin]')
+            const cidadeClin_teste = cidadeClin.value.replace(/\s/g, '')
+
+            if(/^[a-zA-Z]+$/.test(cidadeClin_teste) === true || cidadeClin_teste === ''){
+                cidadeClin.setCustomValidity('')
+                cidadeClin.style.border = "none"
+            }else{
+                cidadeClin.setCustomValidity('Cidade Inválida')
+                cidadeClin.style.border = "2px solid red";
+            }
+        }
+
+    </script>
+</body>
+</html>

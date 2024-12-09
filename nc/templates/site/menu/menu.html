@@ -1,0 +1,129 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ncare</title>
+    <link rel="stylesheet" href="{% static 'menu_est.css' %}">
+</head>
+<body>
+        
+    <header class="header">
+        <div class="logo"><a href="{% url 'menu' %}">natal<span>care</span></a></div>
+        <a href="{% url 'pesq' %}"><input type="text" placeholder="Digite o nome da clínica:" class="search-input"></a>
+        <span id="prfl-login">
+            {% if request.user.usuario %}
+                <button class="login-button" id="usu">{{request.user.usuario}}</button>
+                <div class="menu-panel" id="menuPanel">
+                    <section id="menuh">
+                            <a href="{% url 'menu' %}">
+                                <section id="opc"><h4>Menu</h4></section>
+                            </a>
+                            <a href="{% url 'perfil' %}">
+                                <section id="opc"><h4>Perfil</h4></section>
+                            </a>
+                            <a href="{% url 'pesq' %}">
+                                <section id="opc"><h4>Pesquisa</h4></section>
+                            </a>
+                            <a href="{% url 'chatusu' %}">
+                                <section id="opc"><h4>Agendamento</h4></section>
+                            </a>
+                            <a href="{% url 'logoutu' %}">
+                                <section id="opc"><h4>Sair</h4></section>
+                            </a>
+                    </section>
+                </div>
+                <button class="menu-button" onclick="toggleMenuPanel()"><img src="{% static 'imagens_site/menu-img.png' %}" alt="" height="50px" width="50px"></button>
+            {% else %}
+                <img src="{% static 'imagens_site/perfil.svg' %}" alt="user">
+                <button class="login-button"><a href="{% url 'log' %}">Entrar</a></button>
+                <div class="menu-panel" id="menuPanel">
+                    <section id="menuh">
+                        <a href="{% url 'menu' %}">
+                            <section id="opc"><h4>Menu</h4></section>
+                        </a>
+                        <a href="{% url 'pesq' %}">
+                            <section id="opc"><h4>Pesquisa</h4></section>
+                        </a>
+                        <a href="{% url 'log' %}">
+                            <section id="opc"><h4>Entrar</h4></section>
+                        </a>
+                    </section>
+                </div>
+                <button class="menu-button" onclick="toggleMenuPanel()"><img src="{% static 'imagens_site/menu-img.png' %}" alt="" height="50px" width="50px"></button>
+            {% endif %}
+        </span>
+        
+    </header>
+
+
+        <main id="menu-area">
+
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15874.959365045957!2d-35.22050299218751!3d-5.892126899999993!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7b2f8bd32d924eb%3A0x4b49e9c033ae4af3!2sClínica%20Sua%20Consulta!5e0!3m2!1spt-BR!2sbr!4v1731278140183!5m2!1spt-BR!2sbr" width="600" height="550" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+            <section id="ulti-acs">
+                <h1>Últimos acessos do usuário:</h1>
+                {% if hist_usu %}
+                    {% for i in hist_usu %}
+                        <a href="{% url 'clinu' i.clinica.id %}">
+                            <section id="acu">
+                                <img src="{% static 'imagens_site/clingen.svg' %}" alt="">
+                                <h2>{{i.clinica.nome}}</h2>
+                            </section>
+                        </a>
+                    {% endfor %}
+                {% elif request.user.is_authenticated %}
+                    <p style="margin-top: 10px;">Você não acessou nenhuma clínica.</p>
+                {% else %}
+                    <p style="margin-top: 10px;">Usuário não cadastrado não tem acesso ao histórico de acessos.</p>
+                {% endif %}
+            </section>    
+
+        </main>
+
+        <footer class="footer">
+            <div class="footer-menu">
+                <ul>
+                    <li><strong>Início</strong><br>Home<br>Login<br>Cadastro</li>
+                    <li><strong>Sobre nós</strong><br>Informações<br>Contato</li>
+                    <li><strong>Suporte</strong><br>FAQ<br>Chat</li>
+                </ul>
+            </div>
+            <div class="footer-logo">
+                <p class="brand-name">natalcare</p>
+                <p class="brand-slogan">Sua pesquisa acaba aqui!</p>
+            </div>
+            <div class="footer-social">
+                <!-- LinkedIn SVG -->
+                <a href="#" title="LinkedIn">
+                    <img src="{% static 'imagens_site/linkedin.svg' %}" alt="">
+                </a>
+                <!-- Instagram SVG -->
+                <a href="#" title="Instagram">
+                    <img src="{% static 'imagens_site/instagram.svg' %}" alt="">
+                </a>
+                <!-- Facebook SVG -->
+                <a href="#" title="Facebook">
+                    <img src="{% static 'imagens_site/facebook.svg' %}" alt="">
+                </a>
+                <!-- Twitter SVG -->
+                <a href="#" title="Twitter">
+                    <img src="{% static 'imagens_site/x.svg' %}" alt="">
+                </a>
+            </div>
+        </footer>
+
+        <script>
+            function toggleMenuPanel() {
+                var panel = document.getElementById("menuPanel");
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            }
+        </script>
+</body>
+</html>

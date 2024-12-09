@@ -1,0 +1,65 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'sen_est.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <header id="titulo">
+        <h1>natal<span id="care">care</span></h1>
+    </header>
+    <section id="la">
+        <section id="tipo-conta">
+            <input type="radio" id="log_user" name="radio"> <label for="user"><h2>Usuário</h2></label>
+            <input type="radio" id="log_clin" name="radio"> <label for="clin"><h2>Clínica</h2></label>
+        </section>
+
+        {% if messages %}
+            {% for message in messages %}
+                <script>window.alert("{{ message }}");</script>
+            {% endfor %}
+        {% endif %}
+
+    
+        <form method="POST" action="{% url 'promsc' %}" id="log-area-user">
+            {% csrf_token %}
+            <input type="text" placeholder="Email" id="email" name="email">
+            <input type="password" placeholder="Nova Senha" id="senha" name="nsenha">
+            <input type="password" placeholder="Confirmar Senha" id="senha" name="csenha">
+            <input type="submit" value="Mudar Senha">
+        </form>
+        <form method="POST" action="{% url 'promsc' %}" id="log-area-clin">
+            {% csrf_token %}
+            <input type="text" placeholder="Email" id="email" name="email">
+            <input type="password" placeholder="Nova Senha" id="senha" name="nsenha">
+            <input type="password" placeholder="Confirmar Senha" id="senha" name="csenha">
+            <input type="submit" value="Mudar Senha">
+        </form>
+    </section>
+
+    <!-- <script src="{% static 'back.js' %}"></script> -->
+
+    <script>
+        var log_user = document.getElementById('log_user');
+        var log_clin = document.getElementById('log_clin');
+        var log_user_area = document.getElementById('log-area-user');
+        var log_clin_area = document.getElementById('log-area-clin');
+
+        log_user.addEventListener('click', function(){
+            if(log_user.checked){
+                log_user_area.style.display = 'flex';
+                log_clin_area.style.display = 'none';
+            }});
+
+        log_clin.addEventListener('click', function(){
+            if(log_clin.checked){
+                log_clin_area.style.display = 'flex';
+                log_user_area.style.display = 'none';
+            }});
+    </script>
+</body>
+</html>
